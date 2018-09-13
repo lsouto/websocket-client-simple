@@ -17,8 +17,8 @@ module WebSocket
           return if @socket
           @url = url
           uri = URI.parse url
-          @socket = TCPSocket.new(uri.host,
-                                  uri.port || (uri.scheme == 'wss' ? 443 : 80))
+          port = uri.port || (uri.scheme == 'wss' ? 443 : 80)
+          @socket = Socket.tcp(uri.host,port,timeout: 60)
           if ['https', 'wss'].include? uri.scheme
             ctx = OpenSSL::SSL::SSLContext.new
             ctx.ssl_version = options[:ssl_version] || 'SSLv23'
